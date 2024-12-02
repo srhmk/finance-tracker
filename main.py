@@ -61,7 +61,7 @@ def open_registration():
     password_entry = tk.Entry(reg_window, show="*")
     password_entry.pack(pady=3)
 
-    tk.Button(reg_window, text="Submit", relief="flat", borderwidth=0, command=submit_registration).pack()
+    tk.Button(reg_window, text="Submit", relief="flat", borderwidth=0, command=submit_registration).pack(pady=15)
 
 # Login Window
 def open_login():
@@ -100,7 +100,7 @@ def open_login():
     password_entry = tk.Entry(login_window, show="*")
     password_entry.pack(pady=3)
 
-    tk.Button(login_window, text="Login",relief="flat", borderwidth=0, command=submit_login).pack()
+    tk.Button(login_window, text="Login",relief="flat", borderwidth=0, command=submit_login).pack(pady=15)
 
 label = tk.Label(app, image=photologo,bg='#1B2838',relief="flat", borderwidth=0)
 label.place(x=146, y=50)
@@ -108,6 +108,6 @@ label.place(x=146, y=50)
 # Buttons for Main Window 1
 tk.Button(app, text="Register", command=open_registration, image=photo1,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=196, y=275)
 tk.Button(app, text="Login", command=open_login, image=photo2,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=196, y=350)
-tk.Label(app, text="Alpha version 1.12.1",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
+tk.Label(app, text="Alpha version 1.12.2",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
 
 app.mainloop()
