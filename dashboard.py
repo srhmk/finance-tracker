@@ -1,18 +1,16 @@
-# dashboard.py
 import tkinter as tk
-from tkinter import Toplevel, StringVar, OptionMenu, messagebox
+from tkinter import Toplevel, messagebox
 from datetime import datetime
-import mysql.connector
 from database import get_db_connection
 from PIL import Image, ImageTk
-import matplotlib.pyplot as plt
-import time 
+
 # Open Main Window 2 with enhanced functionalities
 def open_main_window2(username):
     main_window2 = tk.Toplevel()
     main_window2.title("Finance Tracker - Main Dashboard")
     main_window2.geometry("800x500")
     main_window2.configure(bg='#1B2838')
+    main_window2.resizable(False, False)
 
     # Fetch balance from the database
     conn = get_db_connection()
@@ -26,17 +24,18 @@ def open_main_window2(username):
 
     # Welcome Message and Date Display
     welcome_label = tk.Label(main_window2, text=f"Welcome, {username}", font=("Copperplate Gothic Bold", 30),bg='#1B2838',fg='white')
-    welcome_label.pack(pady=(10,10))
+    welcome_label.pack(pady=(10,3))
 
     date_label = tk.Label(main_window2, text=f"Date: {datetime.now().strftime('%Y-%m-%d')}", font=("Comic Sans MS", 15,), bg='#1B2838',fg='white')
-    date_label.pack(pady=(0,5))
+    date_label.pack(pady=(0,2))
 
     # Balance Display
-    balance_label = tk.Label(main_window2, text=f"Balance: {balance_amount:.2f}₹", font=("Ink Free", 25), fg="green", bg='#1B2838',)
+    balance_label = tk.Label(main_window2, text=f"Balance: {balance_amount:.2f}₹", font=("Ink Free", 35), fg="green", bg='#1B2838',)
     balance_label.pack(pady=(0,1))
-    description = tk.Label(main_window2, text=f"(View balance through manage finance\nincase it doesnt refresh!!)", font=("@MS UI Gothic", 8), fg="orange", bg="#1B2838")
+    description = tk.Label(main_window2, text=f"(View balance through manage finances\nincase it doesnt refresh!!)", font=("@MS UI Gothic", 8), fg="orange", bg="#1B2838")
     description.pack()
-    
+
+    # Function to update the balance
     def update_balance_display():
     # Fetch the latest balance from the database
         
@@ -52,32 +51,47 @@ def open_main_window2(username):
         balance_label.config(text=f"Balance: {balance_amount:.2f}₹")
 
         # Schedule the next update
-        main_window2.after(3000, update_balance_display)
+        main_window2.after(2000, update_balance_display)
 
     # Expense History
     def view_expense_history():
         history_window = Toplevel(main_window2)
         history_window.title("Expense History")
-        history_window.geometry("400x300")
+        history_window.geometry("800x400")
         history_window.configure(bg='#1B2838')
+        history_window.resizable(False, False)
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s ORDER BY date DESC", (username,))
-        transactions = cursor.fetchall()
-        cursor.close()
-        conn.close()
+        periods = ["Daily", "Weekly", "Monthly"]
+        frames = {}
 
-        scroll = tk.Scrollbar(history_window, bg='#1B2838')
-        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        def fetch_transactions(period):
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            if period == "Daily":
+                cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s AND date = CURDATE() ORDER BY date DESC", (username,))
+            elif period == "Weekly":
+                cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s AND YEARWEEK(date, 1) = YEARWEEK(CURDATE(), 1) ORDER BY date DESC", (username,))
+            else:  # Monthly
+                cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) ORDER BY date DESC", (username,))
+            transactions = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return transactions
 
-        listbox = tk.Listbox(history_window, yscrollcommand=scroll.set, bg='#1B2838', fg='red', font=('Sylfaen', 10))
-        listbox.pack(fill=tk.BOTH, expand=1,side="top")
-
-        for trans in transactions:
-            listbox.insert(tk.END, f"{trans[0]} | ${trans[1]:.2f} | {trans[2]} | {trans[3]}")
-
-        scroll.config(command=listbox.yview)
+        for period in periods:
+            frame = tk.Frame(history_window, bg='#1B2838')
+            frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+            tk.Label(frame, text=period, bg='#1B2838', fg='white', font=('Dubai Medium', 14)).pack()
+            scroll = tk.Scrollbar(frame, bg='#1B2838')
+            scroll.pack(side=tk.RIGHT, fill=tk.Y)
+            listbox = tk.Listbox(frame, yscrollcommand=scroll.set, bg='#1B2838', fg='red', font=('Sylfaen', 10))
+            listbox.pack(fill=tk.BOTH, expand=1, side="top")
+            scroll.config(command=listbox.yview)
+            transactions = fetch_transactions(period)
+            for trans in transactions:
+                listbox.insert(tk.END, f"{trans[0]} | ${trans[1]:.2f}")
+                listbox.insert(tk.END, f"{trans[2]} | {trans[3]}")
+            frames[period] = frame
 
     # Credit Management
     def manage_credits():
@@ -85,6 +99,7 @@ def open_main_window2(username):
         credit_window.title("Manage Credits")
         credit_window.geometry("400x300")
         credit_window.configure(bg='#1B2838')
+        credit_window.resizable(False, False)
 
         a=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddCredit.png")
         a1 = a.resize((150, 45))
@@ -113,6 +128,7 @@ def open_main_window2(username):
         add_credit_window.title("Add Credit")
         add_credit_window.geometry("300x230")
         add_credit_window.configure(bg='#1B2838')
+        add_credit_window.resizable(False, False)
 
         tk.Label(add_credit_window, text="Amount:",bg='#1B2838',fg='yellow',font=('Bahnschrift SemiBold SemiConden',15)).pack()
         amount_entry = tk.Entry(add_credit_window)
@@ -150,6 +166,7 @@ def open_main_window2(username):
         pending_window.title("Pending Credits")
         pending_window.geometry("300x300")
         pending_window.configure(bg='#1B2838')
+        pending_window.resizable(False, False)
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -202,6 +219,7 @@ def open_main_window2(username):
         completed_window.title("Completed Credits")
         completed_window.geometry("400x400")
         completed_window.configure(bg='#1B2838')
+        completed_window.resizable(False, False)
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -221,12 +239,15 @@ def open_main_window2(username):
 
         scroll.config(command=listbox.yview)
 
+#To do: Change Sno to Char from Int so that it is easier for user to mark as complete, also change accordingly in def view_completed_credits;. Change SQL also.
+
     # Manage Finances
     def manage_finances():
         manage_window = Toplevel(main_window2)
         manage_window.title("Manage Finances")
         manage_window.geometry("400x300")
         manage_window.configure(bg='#1B2838')
+        manage_window.resizable(False, False)
 
         d=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddExpense.png")
         d1 = d.resize((150, 45))
@@ -255,17 +276,18 @@ def open_main_window2(username):
         expense_window.title("Add Expense")
         expense_window.geometry("300x250")
         expense_window.configure(bg='#1B2838')
+        expense_window.resizable(False, False)
         
         tk.Label(expense_window, text="Amount:", bg='#1B2838',fg='red',font=('Bahnschrift SemiBold SemiConden',15)).pack()
         amount_entry = tk.Entry(expense_window)
         amount_entry.pack()
         
         tk.Label(expense_window, text="Category:", bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',15)).pack()
+        tk.Label(expense_window, text="(under 20 letters)", bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',7)).pack(pady=0)
         category_entry = tk.Entry(expense_window)
         category_entry.pack()
 
-        tk.Label(expense_window, text="Description:", bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',15)).pack()
-        tk.Label(expense_window, text="(under 20 letters)", bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',7)).pack(pady=0)
+        tk.Label(expense_window, text="To:", bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',15)).pack()
         description_entry = tk.Entry(expense_window)
         description_entry.pack()
 
@@ -303,8 +325,9 @@ def open_main_window2(username):
         tk.Label(balance_window, text="Enter Amount to Add:", bg='#1B2838',fg='yellow',font=('Bahnschrift SemiBold SemiConden',15)).pack(expand=True)
         balance_entry = tk.Entry(balance_window)
         balance_entry.pack(expand=True)
+        balance_window.resizable(False, False)
 
-        def submit_balance():
+        def submit_balance():            
             amount = float(balance_entry.get())
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -323,6 +346,7 @@ def open_main_window2(username):
         view_balance_window.title("View Balance")
         view_balance_window.geometry("300x200")
         view_balance_window.configure(bg='#1B2838')
+        view_balance_window.resizable(False, False)
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -339,6 +363,7 @@ def open_main_window2(username):
         about_window.title("About Our Creators")
         about_window.geometry("400x300")
         about_window.configure(bg='#1B2838')
+        about_window.resizable(False, False)
         tk.Label(about_window, text="Creators:", font=("Papyrus",20), bg='#1B2838',fg='white').pack(side='top',padx=10)
         tk.Label(about_window, text="Chindumadhi\nHemant\nSrihari", font=("Consolas", 14), bg='#1B2838',fg='white').pack(expand='True')
 
@@ -346,19 +371,19 @@ def open_main_window2(username):
     resized_image5 = DE.resize((338, 153))
     DE1 = ImageTk.PhotoImage(resized_image5)
     
-    MF=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\ManageFinances.png")
+    MF=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ManageFinances.png")
     resized_image1 = MF.resize((150, 55))
     MF1 = ImageTk.PhotoImage(resized_image1)
 
-    MC=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\manageCredits.png")
+    MC=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\manageCredits.png")
     resized_image2 = MC.resize((150, 55))
     MC1 = ImageTk.PhotoImage(resized_image2)
 
-    EH=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\ExpenseHistory.png")
+    EH=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ExpenseHistory.png")
     resized_image3 = EH.resize((150, 55))
     EH1 = ImageTk.PhotoImage(resized_image3)
 
-    AB=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\AboutCreators.png")
+    AB=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AboutCreators.png")
     resized_image4 = AB.resize((110, 35))
     AB1 = ImageTk.PhotoImage(resized_image4)
 
@@ -378,3 +403,5 @@ def open_main_window2(username):
     deco = tk.Label(main_window2, image=DE1,bg='#1B2838',relief="flat", borderwidth=0)
     deco.place(x=226.5, y=275)
     deco.image=DE1
+    
+#To do: Change aboutcreators after having discussions with colleagues

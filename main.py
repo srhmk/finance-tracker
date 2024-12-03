@@ -1,4 +1,3 @@
-# main.py
 import tkinter as tk
 from tkinter import messagebox, Toplevel
 from auth import register_user, login_user
@@ -14,15 +13,15 @@ app.configure(bg='#1B2838')
 current_username = None
 login_attempts = 3 
 #For buttons and labels
-i = Image.open("C:/Users/user/Documents/VSC/Finance tracking system MAIN/logo.png")
+i = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\logo.png")
 image=i.resize((200,200))
 photologo= ImageTk.PhotoImage(image)
 
-rounded_button_image1=Image.open("C:/Users/user/Documents/VSC/Finance tracking system MAIN/button1.png")
+rounded_button_image1=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\button1.png")
 resized_image1 = rounded_button_image1.resize((130, 48))
 photo1 = ImageTk.PhotoImage(resized_image1)
 
-rounded_button_image2=Image.open("C:/Users/user/Documents/VSC/Finance tracking system MAIN/button2.png")
+rounded_button_image2=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\button2.png")
 resized_image2 = rounded_button_image2.resize((130, 48))
 photo2 = ImageTk.PhotoImage(resized_image2)
 
@@ -108,6 +107,9 @@ label.place(x=150, y=45)
 # Buttons for Main Window 1
 tk.Button(app, text="Register", command=open_registration, image=photo1,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=186, y=275)
 tk.Button(app, text="Login", command=open_login, image=photo2,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=186, y=350)
-tk.Label(app, text="Alpha version 1.12.2",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
+tk.Label(app, text="Alpha version 1.12.8",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
 
 app.mainloop()
+
+#To do: TypeError( cannot unpack non-iterable NoneType Object) occured in auth.py but still registration works idk... Fix it
+#To do: If login failed, write exception
