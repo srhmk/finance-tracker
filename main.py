@@ -19,11 +19,11 @@ image=i.resize((200,200))
 photologo= ImageTk.PhotoImage(image)
 
 rounded_button_image1=Image.open("C:/Users/user/Documents/VSC/Finance tracking system MAIN/button1.png")
-resized_image1 = rounded_button_image1.resize((100, 45))
+resized_image1 = rounded_button_image1.resize((130, 48))
 photo1 = ImageTk.PhotoImage(resized_image1)
 
 rounded_button_image2=Image.open("C:/Users/user/Documents/VSC/Finance tracking system MAIN/button2.png")
-resized_image2 = rounded_button_image2.resize((100, 45))
+resized_image2 = rounded_button_image2.resize((130, 48))
 photo2 = ImageTk.PhotoImage(resized_image2)
 
 # Registration Window
@@ -61,7 +61,7 @@ def open_registration():
     password_entry = tk.Entry(reg_window, show="*")
     password_entry.pack(pady=3)
 
-    tk.Button(reg_window, text="Submit", relief="flat", borderwidth=0, command=submit_registration).pack()
+    tk.Button(reg_window, text="Submit", relief="flat", borderwidth=0, command=submit_registration).pack(pady=15)
 
 # Login Window
 def open_login():
@@ -100,14 +100,14 @@ def open_login():
     password_entry = tk.Entry(login_window, show="*")
     password_entry.pack(pady=3)
 
-    tk.Button(login_window, text="Login",relief="flat", borderwidth=0, command=submit_login).pack()
+    tk.Button(login_window, text="Login",relief="flat", borderwidth=0, command=submit_login).pack(pady=15)
 
 label = tk.Label(app, image=photologo,bg='#1B2838',relief="flat", borderwidth=0)
-label.place(x=146, y=50)
+label.place(x=150, y=45)
 
 # Buttons for Main Window 1
-tk.Button(app, text="Register", command=open_registration, image=photo1,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=196, y=275)
-tk.Button(app, text="Login", command=open_login, image=photo2,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=196, y=350)
-tk.Label(app, text="Alpha version 1.12.1",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
+tk.Button(app, text="Register", command=open_registration, image=photo1,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=186, y=275)
+tk.Button(app, text="Login", command=open_login, image=photo2,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=186, y=350)
+tk.Label(app, text="Alpha version 1.12.2",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
 
 app.mainloop()
