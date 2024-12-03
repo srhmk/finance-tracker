@@ -9,12 +9,8 @@ def register_user(username, password):
     cursor = conn.cursor()
     hashed_password = generate_password_hash(password)
     cursor.execute("SELECT username FROM users WHERE username=%s", (str(username),))
-    details = cursor.fetchall()
-    if str(username) == details:
-        messagebox.showerror('Error','Username already exists')
-        cursor.close()
-        conn.close()
-    elif details is None:
+    details = cursor.fetchone()
+    if details is None:
         try:
             cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_password))
             conn.commit()
@@ -37,7 +33,10 @@ def login_user(username, password):
     user = cursor.fetchone()
     cursor.close()
     conn.close()
-    
-    if user and check_password_hash(user['password'], password):
-        return user['username'], "Login successful!"
-    return None, "Invalid username or password"
+    try:
+        if user and check_password_hash(user['password'], password):
+            return user['username'], "Login successful!"
+        return None, "Invalid username or password"
+    except Exception as e:
+        messagebox.showerror('Error', 'Unexpected Error')
+        return None, e

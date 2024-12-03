@@ -134,17 +134,16 @@ def open_main_window2(username):
         amount_entry = tk.Entry(add_credit_window)
         amount_entry.pack()
         
-        tk.Label(add_credit_window, text="Due Date (YYYY-MM-DD):",bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',15)).pack()
+        tk.Label(add_credit_window, text="Due Date (YYYY-MM-DD):",bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',13)).pack()
         due_date_entry = tk.Entry(add_credit_window)
         due_date_entry.pack()
 
-        tk.Label(add_credit_window, text="Type Sno. of the credit :",bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',15)).pack()
+        tk.Label(add_credit_window, text="Name of the Obligee:",bg='#1B2838',fg='white',font=('Bahnschrift SemiBold SemiConden',13)).pack()
         Sno_no = tk.Entry(add_credit_window)
         Sno_no.pack()
 
         def submit_credit():
             global Sno 
-            
 
             amount = float(amount_entry.get())
             due_date = due_date_entry.get()
@@ -164,7 +163,7 @@ def open_main_window2(username):
     def view_pending_credits():
         pending_window = Toplevel(main_window2.winfo_toplevel())
         pending_window.title("Pending Credits")
-        pending_window.geometry("300x300")
+        pending_window.geometry("400x400")
         pending_window.configure(bg='#1B2838')
         pending_window.resizable(False, False)
 
@@ -176,9 +175,9 @@ def open_main_window2(username):
         conn.close()
 
         for credit in credits:
-            tk.Label(pending_window, text=f"Sno: {credit[0]} | Amount: {credit[1]:.2f}₹ | Due: {credit[2]}", bg='#1B2838', fg='yellow', font=('Bahnschrift SemiBold SemiConden', 10)).pack()
-        tk.Label(pending_window, text="Enter Sno and Due Date to mark as complete:", bg='#1B2838', fg='white', font=('Bahnschrift SemiBold SemiConden', 10)).pack(pady=2)
-        tk.Label(pending_window, text="Sno:", bg='#1B2838', fg='white', font=('Bahnschrift SemiBold SemiConden', 10)).pack(pady=2)
+            tk.Label(pending_window, text=f"Name: {credit[0]} | Amount: {credit[1]:.2f}₹ | Due: {credit[2]}", bg='#1B2838', fg='yellow', font=('Bahnschrift SemiBold SemiConden', 10)).pack()
+        tk.Label(pending_window, text="Enter Name and Due Date to mark as complete:", bg='#1B2838', fg='white', font=('Bahnschrift SemiBold SemiConden', 10)).pack(pady=2)
+        tk.Label(pending_window, text="Name:", bg='#1B2838', fg='white', font=('Bahnschrift SemiBold SemiConden', 10)).pack(pady=2)
         sno_entry = tk.Entry(pending_window)
         sno_entry.pack()
         tk.Label(pending_window, text="Due Date:", bg='#1B2838', fg='white', font=('Bahnschrift SemiBold SemiConden', 10)).pack(pady=2)
@@ -186,14 +185,14 @@ def open_main_window2(username):
         due_date_entry.pack()
 
         def mark_completed():
-            sno = int(sno_entry.get())
+            sno = str(sno_entry.get())
             due_date = str(due_date_entry.get())
             conn = get_db_connection()
             cursor = conn.cursor()
             print("username:", username, type(username))
-            print("sno:", sno, type(sno))
+            print("Name:", sno, type(sno))
             print("due_date:", due_date, type(due_date))
-            cursor.execute("SELECT amt FROM credits WHERE user_id = %s AND no = %s AND due_date = %s AND status = 'pending'", (str(username), int(sno), str(due_date)))
+            cursor.execute("SELECT amt FROM credits WHERE user_id = %s AND no = %s AND due_date = %s AND status = 'pending'", (str(username), str(sno), str(due_date)))
             result = cursor.fetchone()
             if result is None:
                 messagebox.showerror("Error", "No such pending credit found.")
@@ -203,7 +202,7 @@ def open_main_window2(username):
             conn.commit()
             cursor.close()
             cursor = conn.cursor()
-            cursor.execute("UPDATE credits SET status = 'completed' WHERE user_id = %s AND no = %s AND due_date = %s", (str(username), int(sno), str(due_date)))
+            cursor.execute("UPDATE credits SET status = 'completed' WHERE user_id = %s AND no = %s AND due_date = %s", (str(username), str(sno), str(due_date)))
             conn.commit()
             cursor.close()
             conn.close() 
@@ -217,13 +216,13 @@ def open_main_window2(username):
     def view_completed_credits():
         completed_window = Toplevel(main_window2)
         completed_window.title("Completed Credits")
-        completed_window.geometry("400x400")
+        completed_window.geometry("600x400")
         completed_window.configure(bg='#1B2838')
         completed_window.resizable(False, False)
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT amt, due_date FROM credits WHERE user_id = %s AND status = 'completed'", (username,))
+        cursor.execute("SELECT amt, due_date, no FROM credits WHERE user_id = %s AND status = 'completed'", (username,))
         credits = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -231,15 +230,13 @@ def open_main_window2(username):
         scroll = tk.Scrollbar(completed_window, bg='#1B2838',)
         scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
-        listbox = tk.Listbox(completed_window, yscrollcommand=scroll.set, bg='#1B2838', fg='green', font=('fixedsys', 12), )
+        listbox = tk.Listbox(completed_window, yscrollcommand=scroll.set, bg='#1B2838', fg='green', font=('fixedsys', 10), )
         listbox.pack(fill=tk.BOTH, expand=1)
 
         for credit in credits:
-            listbox.insert(tk.END, f"Amount: {credit[0]:.2f}₹ | Due: {credit[1]}")
+            listbox.insert(tk.END, f"Amount: {credit[0]:.2f}₹ | Due: {credit[1]} | To: {credit[2]}")
 
         scroll.config(command=listbox.yview)
-
-#To do: Change Sno to Char from Int so that it is easier for user to mark as complete, also change accordingly in def view_completed_credits;. Change SQL also.
 
     # Manage Finances
     def manage_finances():
@@ -364,8 +361,10 @@ def open_main_window2(username):
         about_window.geometry("400x300")
         about_window.configure(bg='#1B2838')
         about_window.resizable(False, False)
-        tk.Label(about_window, text="Creators:", font=("Papyrus",20), bg='#1B2838',fg='white').pack(side='top',padx=10)
-        tk.Label(about_window, text="Chindumadhi\nHemant\nSrihari", font=("Consolas", 14), bg='#1B2838',fg='white').pack(expand='True')
+        tk.Label(about_window, text="Developers:", font=("Papyrus",20), bg='#1B2838',fg='white').pack(side='top',padx=10)
+        tk.Label(about_window, text="Chindumadhi,\nHemant,\nSrihari,", font=("Consolas", 12), bg='#1B2838',fg='white').pack(expand='True')
+        tk.Label(about_window, text="of class 12A(Computer Science Batch 2024-25)", font=("Consolas", 8), bg='#1B2838',fg='white').place(x=69, y=194)
+        tk.Label(about_window, text="Kv No.1 Jipmer Campus Puducherry SHIFT 1", font=("Lucida Bright",8), bg='#1B2838',fg='white').pack(side='bottom',padx=10)
 
     DE=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\deco1.png")
     resized_image5 = DE.resize((338, 153))
@@ -403,5 +402,3 @@ def open_main_window2(username):
     deco = tk.Label(main_window2, image=DE1,bg='#1B2838',relief="flat", borderwidth=0)
     deco.place(x=226.5, y=275)
     deco.image=DE1
-    
-#To do: Change aboutcreators after having discussions with colleagues

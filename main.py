@@ -9,9 +9,12 @@ app = tk.Tk()
 app.title("SHC Finance Tracker - Login and Registration")
 app.geometry("500x550")
 app.configure(bg='#1B2838')
+app.resizable(False, False)
+
 # Global Variables
 current_username = None
 login_attempts = 3 
+
 #For buttons and labels
 i = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\logo.png")
 image=i.resize((200,200))
@@ -31,6 +34,7 @@ def open_registration():
     reg_window.title("Register")
     reg_window.geometry("400x300")
     reg_window.configure(bg='#1B2838')
+    reg_window.resizable(False, False)
 
     def submit_registration():
         username = username_entry.get()
@@ -69,6 +73,7 @@ def open_login():
     login_window.title("Login")
     login_window.geometry("400x300")
     login_window.configure(bg='#1B2838')
+    login_window.resizable(False, False)
 
     def submit_login():
         global current_username, login_attempts
@@ -110,6 +115,3 @@ tk.Button(app, text="Login", command=open_login, image=photo2,bg='#1B2838',relie
 tk.Label(app, text="Alpha version 1.12.8",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
 
 app.mainloop()
-
-#To do: TypeError( cannot unpack non-iterable NoneType Object) occured in auth.py but still registration works idk... Fix it
-#To do: If login failed, write exception
