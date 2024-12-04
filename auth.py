@@ -1,16 +1,15 @@
-# auth.py
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db_connection
 from tkinter import messagebox
 
-# Register a new user
+#Register a new user
 def register_user(username, password):
     conn = get_db_connection()
     cursor = conn.cursor()
     hashed_password = generate_password_hash(password)
     cursor.execute("SELECT username FROM users WHERE username=%s", (str(username),))
     details = cursor.fetchone()
-    if details is None:
+    if details is None: #Checks whether username already exists
         try:
             cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_password))
             conn.commit()
@@ -25,7 +24,7 @@ def register_user(username, password):
         cursor.close()
         conn.close()
 
-# Login existing user
+#Login existing user
 def login_user(username, password):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)

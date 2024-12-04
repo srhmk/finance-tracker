@@ -4,7 +4,9 @@ from datetime import datetime
 from database import get_db_connection
 from PIL import Image, ImageTk
 
-# Open Main Window 2 with enhanced functionalities
+#To do: Write create if not exists sql queries
+
+#Open Main Window 2
 def open_main_window2(username):
     main_window2 = tk.Toplevel()
     main_window2.title("Finance Tracker - Main Dashboard")
@@ -12,7 +14,6 @@ def open_main_window2(username):
     main_window2.configure(bg='#1B2838')
     main_window2.resizable(False, False)
 
-    # Fetch balance from the database
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT username,balance FROM users WHERE username = %s", (username,))
@@ -22,22 +23,19 @@ def open_main_window2(username):
     cursor.close()
     conn.close()
 
-    # Welcome Message and Date Display
     welcome_label = tk.Label(main_window2, text=f"Welcome, {username}", font=("Copperplate Gothic Bold", 30),bg='#1B2838',fg='white')
     welcome_label.pack(pady=(10,3))
 
     date_label = tk.Label(main_window2, text=f"Date: {datetime.now().strftime('%Y-%m-%d')}", font=("Comic Sans MS", 15,), bg='#1B2838',fg='white')
     date_label.pack(pady=(0,2))
 
-    # Balance Display
-    balance_label = tk.Label(main_window2, text=f"Balance: {balance_amount:.2f}₹", font=("Ink Free", 35), fg="green", bg='#1B2838',)
+    balance_label = tk.Label(main_window2, text=f"Balance: {balance_amount:.1f}₹", font=("Ink Free", 35), fg="green", bg='#1B2838',)
     balance_label.pack(pady=(0,1))
     description = tk.Label(main_window2, text=f"(View balance through manage finances\nincase it doesnt refresh!!)", font=("@MS UI Gothic", 8), fg="orange", bg="#1B2838")
     description.pack()
 
-    # Function to update the balance
+    #Function to update the balance
     def update_balance_display():
-    # Fetch the latest balance from the database
         
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -47,13 +45,11 @@ def open_main_window2(username):
         cursor.close()
         conn.close()
 
-        # Update the balance label
-        balance_label.config(text=f"Balance: {balance_amount:.2f}₹")
+        balance_label.config(text=f"Balance: {balance_amount:.1f}₹")
 
-        # Schedule the next update
-        main_window2.after(2000, update_balance_display)
+        main_window2.after(2000, update_balance_display) #Schedules the next update
 
-    # Expense History
+    #Expense History
     def view_expense_history():
         history_window = Toplevel(main_window2)
         history_window.title("Expense History")
@@ -71,7 +67,7 @@ def open_main_window2(username):
                 cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s AND date = CURDATE() ORDER BY date DESC", (username,))
             elif period == "Weekly":
                 cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s AND YEARWEEK(date, 1) = YEARWEEK(CURDATE(), 1) ORDER BY date DESC", (username,))
-            else:  # Monthly
+            else: #Monthly
                 cursor.execute("SELECT date, amount, category, description FROM transactions WHERE user_id = %s AND MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) ORDER BY date DESC", (username,))
             transactions = cursor.fetchall()
             cursor.close()
@@ -93,7 +89,7 @@ def open_main_window2(username):
                 listbox.insert(tk.END, f"{trans[2]} | {trans[3]}")
             frames[period] = frame
 
-    # Credit Management
+    #Credit Management
     def manage_credits():
         credit_window = Toplevel(main_window2)
         credit_window.title("Manage Credits")
@@ -101,25 +97,25 @@ def open_main_window2(username):
         credit_window.configure(bg='#1B2838')
         credit_window.resizable(False, False)
 
-        a=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddCredit.png")
+        a = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddCredit.png")
         a1 = a.resize((150, 45))
         a2 = ImageTk.PhotoImage(a1)
 
-        b=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\PendingCredits.png")
+        b = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\PendingCredits.png")
         b1 = b.resize((150, 45))
         b2 = ImageTk.PhotoImage(b1)
 
-        c=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\CompletedCredits.png")
+        c = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\CompletedCredits.png")
         c1 = c.resize((150, 45))
         c2 = ImageTk.PhotoImage(c1)
 
-        A=tk.Button(credit_window, text="Add Credit", command=add_credit, image=a2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+        A = tk.Button(credit_window, text="Add Credit", command=add_credit, image=a2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
         A.image=a2
         A.place(x=135,y=50)
-        B=tk.Button(credit_window, text="Pending Credits", command=view_pending_credits, image=b2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+        B = tk.Button(credit_window, text="Pending Credits", command=view_pending_credits, image=b2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
         B.image=b2
         B.place(x=135,y=125)
-        C=tk.Button(credit_window, text="Completed Credits", command=view_completed_credits,image=c2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+        C = tk.Button(credit_window, text="Completed Credits", command=view_completed_credits,image=c2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
         C.image=c2
         C.place(x=135,y=200)
 
@@ -238,7 +234,7 @@ def open_main_window2(username):
 
         scroll.config(command=listbox.yview)
 
-    # Manage Finances
+    #Manage Finances
     def manage_finances():
         manage_window = Toplevel(main_window2)
         manage_window.title("Manage Finances")
@@ -246,25 +242,25 @@ def open_main_window2(username):
         manage_window.configure(bg='#1B2838')
         manage_window.resizable(False, False)
 
-        d=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddExpense.png")
+        d = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddExpense.png")
         d1 = d.resize((150, 45))
         d2 = ImageTk.PhotoImage(d1)
 
-        e=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddBalance.png")
+        e = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddBalance.png")
         e1 = e.resize((150, 45))
         e2 = ImageTk.PhotoImage(e1)
 
-        f=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ViewBalance.png")
+        f = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ViewBalance.png")
         f1 = f.resize((150, 45))
         f2 = ImageTk.PhotoImage(f1)
 
-        D=tk.Button(manage_window, text="Add Expense", command=add_expense, image=d2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+        D = tk.Button(manage_window, text="Add Expense", command=add_expense, image=d2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
         D.image=d2
         D.place(x=135,y=50)
-        E=tk.Button(manage_window, text="Add Balance", command=add_balance, image=e2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+        E = tk.Button(manage_window, text="Add Balance", command=add_balance, image=e2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
         E.image=e2
         E.place(x=135,y=125)
-        F=tk.Button(manage_window, text="View Balance", command=view_balance,image=f2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+        F = tk.Button(manage_window, text="View Balance", command=view_balance,image=f2, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
         F.image=f2
         F.place(x=135,y=200)
 
@@ -293,7 +289,7 @@ def open_main_window2(username):
             category = category_entry.get()
             description = description_entry.get()
 
-            # Subtract the expense amount from the user's balance
+            #Subtract the expense amount from the users balance
             conn = get_db_connection()
             cursor = conn.cursor()  
             cursor.execute("UPDATE users SET balance = balance - %s WHERE username = %s", (amount, username))
@@ -354,7 +350,7 @@ def open_main_window2(username):
         
         tk.Label(view_balance_window, text=f"Your current balance is ${balance:.2f}",bg='#1B2838',fg='green',font=('fixedsys',15)).pack(expand=True)
 
-    # About Creators
+    #Developers
     def about_creators():
         about_window = Toplevel(main_window2)
         about_window.title("About Our Creators")
@@ -366,37 +362,38 @@ def open_main_window2(username):
         tk.Label(about_window, text="of class 12A(Computer Science Batch 2024-25)", font=("Consolas", 8), bg='#1B2838',fg='white').place(x=69, y=194)
         tk.Label(about_window, text="Kv No.1 Jipmer Campus Puducherry SHIFT 1", font=("Lucida Bright",8), bg='#1B2838',fg='white').pack(side='bottom',padx=10)
 
-    DE=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\deco1.png")
+    #Images
+    DE = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\deco1.png")
     resized_image5 = DE.resize((338, 153))
     DE1 = ImageTk.PhotoImage(resized_image5)
     
-    MF=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ManageFinances.png")
+    MF = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ManageFinances.png")
     resized_image1 = MF.resize((150, 55))
     MF1 = ImageTk.PhotoImage(resized_image1)
 
-    MC=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\manageCredits.png")
+    MC = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\manageCredits.png")
     resized_image2 = MC.resize((150, 55))
     MC1 = ImageTk.PhotoImage(resized_image2)
 
-    EH=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ExpenseHistory.png")
+    EH = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\ExpenseHistory.png")
     resized_image3 = EH.resize((150, 55))
     EH1 = ImageTk.PhotoImage(resized_image3)
 
-    AB=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AboutCreators.png")
+    AB = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AboutCreators.png")
     resized_image4 = AB.resize((110, 35))
     AB1 = ImageTk.PhotoImage(resized_image4)
 
-    # Place Buttons in Main Window 2
-    button1=tk.Button(main_window2, text="Manage Finances", command=manage_finances, image=MF1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+    #Buttons in Main Window 2
+    button1 = tk.Button(main_window2, text="Manage Finances", command=manage_finances, image=MF1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
     button1.image=MF1
     button1.place(relx=0.5, rely=0.5, anchor="center")
-    button2=tk.Button(main_window2, text="Manage Credits", command=manage_credits, image=MC1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+    button2 = tk.Button(main_window2, text="Manage Credits", command=manage_credits, image=MC1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
     button2.image=MC1
     button2.pack(side="right", padx=(0,80))
-    button3=tk.Button(main_window2, text="Expense History", command=view_expense_history, image=EH1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+    button3 = tk.Button(main_window2, text="Expense History", command=view_expense_history, image=EH1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
     button3.image=EH1
     button3.pack(side="left", padx=(80,0))
-    button4=tk.Button(main_window2, text="About Creators", command=about_creators, image=AB1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
+    button4 = tk.Button(main_window2, text="About Creators", command=about_creators, image=AB1, bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=main_window2.cget("bg"), activebackground='#1B2838')
     button4.image=AB1
     button4.pack(side="bottom", pady=30)
     deco = tk.Label(main_window2, image=DE1,bg='#1B2838',relief="flat", borderwidth=0)
