@@ -4,8 +4,6 @@ from datetime import datetime
 from database import get_db_connection
 from PIL import Image, ImageTk
 
-#To do: Write create if not exists sql queries
-
 #Open Main Window 2
 def open_main_window2(username):
     main_window2 = tk.Toplevel()
@@ -13,6 +11,7 @@ def open_main_window2(username):
     main_window2.geometry("800x500")
     main_window2.configure(bg='#1B2838')
     main_window2.resizable(False, False)
+    main_window2.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -56,6 +55,7 @@ def open_main_window2(username):
         history_window.geometry("800x400")
         history_window.configure(bg='#1B2838')
         history_window.resizable(False, False)
+        history_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         periods = ["Daily", "Weekly", "Monthly"]
         frames = {}
@@ -96,6 +96,7 @@ def open_main_window2(username):
         credit_window.geometry("400x300")
         credit_window.configure(bg='#1B2838')
         credit_window.resizable(False, False)
+        credit_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         a = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddCredit.png")
         a1 = a.resize((150, 45))
@@ -125,6 +126,7 @@ def open_main_window2(username):
         add_credit_window.geometry("300x230")
         add_credit_window.configure(bg='#1B2838')
         add_credit_window.resizable(False, False)
+        add_credit_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         tk.Label(add_credit_window, text="Amount:",bg='#1B2838',fg='yellow',font=('Bahnschrift SemiBold SemiConden',15)).pack()
         amount_entry = tk.Entry(add_credit_window)
@@ -162,6 +164,7 @@ def open_main_window2(username):
         pending_window.geometry("400x400")
         pending_window.configure(bg='#1B2838')
         pending_window.resizable(False, False)
+        pending_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -215,6 +218,7 @@ def open_main_window2(username):
         completed_window.geometry("600x400")
         completed_window.configure(bg='#1B2838')
         completed_window.resizable(False, False)
+        completed_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -241,6 +245,7 @@ def open_main_window2(username):
         manage_window.geometry("400x300")
         manage_window.configure(bg='#1B2838')
         manage_window.resizable(False, False)
+        manage_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         d = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\AddExpense.png")
         d1 = d.resize((150, 45))
@@ -270,6 +275,7 @@ def open_main_window2(username):
         expense_window.geometry("300x250")
         expense_window.configure(bg='#1B2838')
         expense_window.resizable(False, False)
+        expense_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
         
         tk.Label(expense_window, text="Amount:", bg='#1B2838',fg='red',font=('Bahnschrift SemiBold SemiConden',15)).pack()
         amount_entry = tk.Entry(expense_window)
@@ -314,6 +320,7 @@ def open_main_window2(username):
         balance_window.title("Add Balance")
         balance_window.geometry("300x200")
         balance_window.configure(bg='#1B2838')
+        balance_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
         
         tk.Label(balance_window, text="Enter Amount to Add:", bg='#1B2838',fg='yellow',font=('Bahnschrift SemiBold SemiConden',15)).pack(expand=True)
         balance_entry = tk.Entry(balance_window)
@@ -340,6 +347,7 @@ def open_main_window2(username):
         view_balance_window.geometry("300x200")
         view_balance_window.configure(bg='#1B2838')
         view_balance_window.resizable(False, False)
+        view_balance_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -357,6 +365,8 @@ def open_main_window2(username):
         about_window.geometry("400x300")
         about_window.configure(bg='#1B2838')
         about_window.resizable(False, False)
+        about_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
+
         tk.Label(about_window, text="Developers:", font=("Papyrus",20), bg='#1B2838',fg='white').pack(side='top',padx=10)
         tk.Label(about_window, text="Chindumadhi,\nHemant,\nSrihari,", font=("Consolas", 12), bg='#1B2838',fg='white').pack(expand='True')
         tk.Label(about_window, text="of class 12A(Computer Science Batch 2024-25)", font=("Consolas", 8), bg='#1B2838',fg='white').place(x=69, y=194)
