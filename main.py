@@ -18,6 +18,7 @@ login_attempts = 3
 i = Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\logo.png")
 image=i.resize((200,200))
 photologo= ImageTk.PhotoImage(image)
+app.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
 rounded_button_image1=Image.open(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\button1.png")
 resized_image1 = rounded_button_image1.resize((130, 48))
@@ -34,7 +35,8 @@ def open_registration():
     reg_window.geometry("400x300")
     reg_window.configure(bg='#1B2838')
     reg_window.resizable(False, False)
-
+    reg_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
+    
     def submit_registration():
         username = username_entry.get()
         password = password_entry.get()
@@ -73,6 +75,7 @@ def open_login():
     login_window.geometry("400x300")
     login_window.configure(bg='#1B2838')
     login_window.resizable(False, False)
+    login_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
 
     def submit_login():
         global current_username, login_attempts
@@ -111,6 +114,6 @@ label.place(x=150, y=45)
 #Buttons for Main Window 1
 tk.Button(app, text="Register", command=open_registration, image=photo1,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=186, y=275)
 tk.Button(app, text="Login", command=open_login, image=photo2,bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').place(x=186, y=350)
-tk.Label(app, text="Alpha version 1.12.9",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
+tk.Label(app, text="Alpha version 1.12.10",font=("Arial"),fg='grey',bg='#1B2838',relief="flat", borderwidth=0, highlightthickness=0, highlightbackground=app.cget("bg"), activebackground='#1B2838').pack(side='bottom')
 
 app.mainloop()
