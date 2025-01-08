@@ -30,12 +30,15 @@ def login_user(username, password):
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
     user = cursor.fetchone()
+    print(user,user['password'], password )
     cursor.close()
     conn.close()
     try:
         if user and check_password_hash(user['password'], password):
+            print(user,user['password'], password )
             return user['username'], "Login successful!"
         return None, "Invalid username or password"
     except Exception as e:
         messagebox.showerror('Error', 'Unexpected Error')
         return None, e
+login_user('Srihari','qwerty1234')

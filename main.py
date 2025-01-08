@@ -51,7 +51,7 @@ def open_registration():
         success, msg = register_user(username, password)
         if success:
             messagebox.showinfo("Login to access", msg)
-            reg_window.after(1500, reg_window.destroy)
+            reg_window.after(1500, reg_window.destroy) 
         else:
             messagebox.showerror("Error", msg)
 
@@ -76,6 +76,17 @@ def open_login():
     login_window.configure(bg='#1B2838')
     login_window.resizable(False, False)
     login_window.iconbitmap(r"C:\Users\user\Documents\VSC\Finance tracking system MAIN\pictures\favicon.ico")
+    
+    tk.Label(login_window,text='LOGIN:',bg='#1B2838',relief="flat", borderwidth=0,fg='white',font=('Impact',30)).pack(pady=20)
+
+    tk.Label(login_window,text="Username-",bg='#1B2838',relief="flat", borderwidth=0,fg='white',font=('Helvetica',10)).pack(pady=10)
+    username_entry = tk.Entry(login_window)
+    username_entry.pack(pady=3)
+    
+    tk.Label(login_window,text="Password-",bg='#1B2838',relief="flat", borderwidth=0,fg='white',font=('Helvetica',10)).pack(pady=10)
+    password_entry = tk.Entry(login_window, show="*")
+    password_entry.pack(pady=3)
+
 
     def submit_login():
         global current_username, login_attempts
@@ -95,16 +106,6 @@ def open_login():
                 login_window.destroy()
             else:
                 messagebox.showerror("Error", f"{msg}. {login_attempts} attempts left.")
-    
-    tk.Label(login_window,text='LOGIN:',bg='#1B2838',relief="flat", borderwidth=0,fg='white',font=('Impact',30)).pack(pady=20)
-
-    tk.Label(login_window,text="Username-",bg='#1B2838',relief="flat", borderwidth=0,fg='white',font=('Helvetica',10)).pack(pady=10)
-    username_entry = tk.Entry(login_window)
-    username_entry.pack(pady=3)
-    
-    tk.Label(login_window,text="Password-",bg='#1B2838',relief="flat", borderwidth=0,fg='white',font=('Helvetica',10)).pack(pady=10)
-    password_entry = tk.Entry(login_window, show="*")
-    password_entry.pack(pady=3)
 
     tk.Button(login_window, text="Login",relief="flat", borderwidth=0, command=submit_login).pack(pady=15)
 
